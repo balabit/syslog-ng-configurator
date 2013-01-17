@@ -1007,6 +1007,15 @@ function logpath_ctrl($scope, $routeParams, $http) {
         $scope.paths.push({"sources": [], "destinations": [], "flags": []});
     }
 
+    $scope.removepath = function(PathToRemove) {
+        if (confirm("Are you sure you want to delete this logpath?")) {
+            var index = this.paths.indexOf(PathToRemove);
+            this.paths.splice(index, 1);
+        }
+        else {
+        }
+    };
+
     $scope.generate_config = function() {
         if ($scope.config_template === null)
             return "LOADING...";

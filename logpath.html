@@ -18,6 +18,7 @@
             <th>Sources</th>
             <th>Destinations</th>
             <th>Flags</th>
+            <th>Remove</th>
         </thead>
         <tbody>
         <tr ng-repeat="path in paths">
@@ -38,6 +39,9 @@
                     <option>final</option>
                     <option>flow-control</option>
                 </select>
+            </td>
+            <td>
+                <a href="" class="button" ng-click="removepath(path)">Remove path</a>
             </td>
         </tr>
         </tbody>
