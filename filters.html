@@ -25,17 +25,17 @@
                 <p>Add a unique name to this filter: </p>
                 <input class="syslog_ng_element" name="filter group name" type="text" ng-model="new_data.filter_name" placeholder="NAME" required="required" />
                 <br />
-                <input class="button" type="submit" value="Facility" ng-click="add_facility($index)"/>
-                <input class="button" type="submit" value="Level" ng-click="add_level($index)"/>
-                <input class="button" type="submit" value="Filter" ng-click="add_filter($index)"/>
-                <input class="button" type="submit" value="Netmask" ng-click="add_netmask($index)"/>
-                <input class="button" type="submit" value="Tags" ng-click="add_tags($index)"/>
-                <input class="button" type="submit" value="Program" ng-click="add_program($index)"/>
-                <input class="button" type="submit" value="Host" ng-click="add_host($index)"/>
-                <input class="button" type="submit" value="Match" ng-click="add_match($index)"/>
-                <input class="button" type="submit" value="Message" ng-click="add_message($index)"/>
-                <input class="button" type="submit" value="Source" ng-click="add_source($index)"/>
-                <input class="button" type="submit" value="Expression" ng-click="add_expression($index)"/>
+                <p>Select filter type: </p>
+                <a href="" class="button" ng-click="add_facility($index)">Facility</a>
+                <a href="" class="button" ng-click="add_level($index)">Level</a>
+                <a href="" class="button" ng-click="add_filter($index)">Filter</a>
+                <a href="" class="button" ng-click="add_netmask($index)">Netmask</a>
+                <a href="" class="button" ng-click="add_tags($index)">Tags</a>
+                <a href="" class="button" ng-click="add_program($index)">Program</a>
+                <a href="" class="button" ng-click="add_host($index)">Host</a>
+                <a href="" class="button" ng-click="add_match($index)">Match</a>
+                <a href="" class="button" ng-click="add_message($index)">Message</a>
+                <a href="" class="button" ng-click="add_source($index)">Source</a>
                 <br />
                 <table class="bordered" id="{{name}}_source" ng-show="!checked">
                     <thead>
@@ -208,7 +208,9 @@
                                     <option>YEAR</option>
                                 </select>
                                 </label>
-                                <input class="syslog_ng_element" type="text" ng-show="data.name == 'expression'" ng-model="data.expression1" required="required"/> <br />
+                                <label ng-show="data.name == 'expression'"> Macro or Template:
+                                <input class="syslog_ng_element" type="text" ng-show="data.name == 'expression'" ng-model="data.expression1" required="required"/>
+                                </label><br />
                                 <label ng-show="data.name == 'expression'"> Select Numerical Operator:
                                 <select ng-model="data.numop">
                                     <option>==</option>
@@ -219,7 +221,9 @@
                                     <option>>=</option>
                                 </select>
                                 </label><br />
-                                <input class="syslog_ng_element" type="text" ng-show="data.name == 'expression'" ng-model="data.expression2" required="required"/><br />
+                                <label ng-show="data.name == 'expression'"> Value or Macro or Template:
+                                <input class="syslog_ng_element" type="text" ng-show="data.name == 'expression'" ng-model="data.expression2" required="required"/>
+                                </label><br />
                             </td>
                             <td>{{data.description}}</td>
                             <td>

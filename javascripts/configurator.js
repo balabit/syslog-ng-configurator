@@ -432,9 +432,10 @@ var configurator = angular.module('configurator', [])
             $rootScope.all_usertty_destinations = [];
 
             $rootScope.include = [];
-            $rootScope.paths = [];
+            $rootScope.paths = [{"sources": [], "filters": [], "destinations": [], "flags": []}];
 
             $rootScope.all_filters = [];
+
             $rootScope.option_groups_for_drivers =
             {
                 s_internal: [$rootScope.options.source_options],
@@ -1153,7 +1154,7 @@ function filters_ctrl($scope, $routeParams) {
 
     $scope.add_expression = function(i)
     {
-        $scope.all_filters[i].options.push({"name": "expression", "accepted": "???", "description": "???", "enabled": true});
+        $scope.all_filters[i].options.push({"name": "expression", "accepted": "", "description": "Compare macro values and templates as numerical and string values.", "enabled": true});
     }
 
     $scope.removefilter = function(FilterToRemove,i) {
