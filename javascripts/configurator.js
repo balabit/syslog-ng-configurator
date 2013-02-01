@@ -62,6 +62,10 @@ var configurator = angular.module('configurator', [])
                 templateUrl: 'sources_template.html',
                 controller: s_unixdgram_ctrl
             })
+            $routeProvider.when('/filters', {
+                templateUrl: 'filters.html',
+                controller: filters_ctrl
+            })
             $routeProvider.when('/destination-drivers/dfile', {
                 templateUrl: 'destinations_template.html',
                 controller: d_file_ctrl
@@ -430,6 +434,7 @@ var configurator = angular.module('configurator', [])
             $rootScope.include = [];
             $rootScope.paths = [];
 
+            $rootScope.all_filters = [];
             $rootScope.option_groups_for_drivers =
             {
                 s_internal: [$rootScope.options.source_options],
@@ -550,6 +555,7 @@ var configurator = angular.module('configurator', [])
                                                     $rootScope.all_unixdgram_destinations,
                                                     $rootScope.all_unixstream_destinations,
                                                     $rootScope.all_usertty_destinations);
+                $rootScope.collected_filters = $rootScope.all_filters;
             };
 
             $rootScope.refreshMenuHighligh = function()
@@ -982,7 +988,7 @@ function logpath_ctrl($scope, $routeParams, $http) {
             var tls_options = ["ca_dir", "crl_dir", "cert_file", "key_file", "cipher_suite", "trusted_keys", "trusted_dn", "peer_verify"];
             var types_for_quoting = ['text_file_name','text_pipe_name','text_program_name','text_ip', 'usertty'];
             var types_for_quoting_inside_parenthesis = ['text', 'select_mark_mode'];
-
+            var types_for_filters = ["facility", "level", "filter", "netmask", "source", "program", "host", "message", "match", "tags"];
             if (types_for_quoting.indexOf(this.input_type) != -1) {
                 return '"'+this.value+'"';
             }
@@ -991,6 +997,33 @@ function logpath_ctrl($scope, $routeParams, $http) {
             }
             else if (types_for_quoting_inside_parenthesis.indexOf(this.input_type) != -1){
                 return this.name+'("'+this.value+'")';
+            }
+            else if (types_for_filters.indexOf(this.name) != -1) {
+                if (this.flag_value) {
+                    flag_value_string = 'flag("'+this.flag_value+'")'
+                }
+                else {
+                    flag_value_string = ""
+                }
+                if (this.type_value) {
+                    type_value_string = 'type("'+this.type_value+'")'
+                }
+                else {
+                    type_value_string = ""
+                }
+                if (this.value_value) {
+                    value_value_string = 'match("'+this.value_value+'")'
+                }
+                else {
+                    value_value_string = ""
+                }
+                if (!(this.negotiation)) {
+                    this.negotiation = " "
+                }
+                else if (!(this.logical_next)) {
+                    this.logical_next = " "
+                }
+                return this.negotiation+" "+this.name+'("'+this.value+'" '+flag_value_string+" "+type_value_string+" "+value_value_string+')'+" "+this.logical_next;
             }
             else {
                 return this.name+'('+this.value+')';
@@ -1004,7 +1037,7 @@ function logpath_ctrl($scope, $routeParams, $http) {
         });
 
     $scope.add_path = function() {
-        $scope.paths.push({"sources": [], "destinations": [], "flags": []});
+        $scope.paths.push({"sources": [], "filters": [], "destinations": [], "flags": []});
     }
 
     $scope.removepath = function(PathToRemove) {
@@ -1058,5 +1091,78 @@ function template_ctrl($scope, $routeParams) {
         }
 
     }
+
+}
+
+function filters_ctrl($scope, $routeParams) {
+
+    $scope.add_new_filter = function()
+    {
+        $scope.all_filters.push({"visible": true, "options": []});
+    }
+
+    $scope.add_facility = function(i)
+    {
+        $scope.all_filters[i].options.push({"name": "facility", "accepted": "Facility name", "description": "Match messages having one of the listed facility name.", "enabled": true});
+    }
+
+    $scope.add_level = function(i)
+    {
+        $scope.all_filters[i].options.push({"name": "level", "accepted": "Level name", "description": "Match messages based on priority.", "enabled": true});
+    }
+
+    $scope.add_filter = function(i)
+    {
+        $scope.all_filters[i].options.push({"name": "filter", "accepted": "filter name", "description": "Call another filter rule and evaluate its value.", "enabled": true});
+    }
+
+    $scope.add_netmask = function(i)
+    {
+        $scope.all_filters[i].options.push({"name": "netmask", "accepted": "ip/netmask", "description": " Select only messages sent by a host whose IP address belongs to the specified IP subnet", "enabled": true});
+    }
+
+    $scope.add_tags = function(i)
+    {
+        $scope.all_filters[i].options.push({"name": "tags", "accepted": "tag", "description": "Select messages labeled with the specified tag", "enabled": true});
+    }
+
+    $scope.add_program = function(i)
+    {
+        $scope.all_filters[i].options.push({"name": "program", "accepted": "regexp", "description": " Match messages by using a regular expression against the program name field of log messages.", "enabled": true});
+    }
+
+    $scope.add_host = function(i)
+    {
+        $scope.all_filters[i].options.push({"name": "host", "accepted": "regexp", "description": " Match messages by using a regular expression against the hostname field of log messages.", "enabled": true});
+    }
+
+    $scope.add_match = function(i)
+    {
+        $scope.all_filters[i].options.push({"name": "match", "accepted": "rexep", "description": "Match a regular expression to the headers and the message itself.", "enabled": true});
+    }
+
+    $scope.add_message = function(i)
+    {
+        $scope.all_filters[i].options.push({"name": "message", "accepted": "regexp", "description": "Match a regular expression to the text of the log message, excluding the headers", "enabled": true});
+    }
+
+    $scope.add_source = function(i)
+    {
+        $scope.all_filters[i].options.push({"name": "source", "accepted": "source id", "description": "Select messages of a source statement.", "enabled": true});
+    }
+
+    $scope.add_expression = function(i)
+    {
+        $scope.all_filters[i].options.push({"name": "expression", "accepted": "???", "description": "???", "enabled": true});
+    }
+
+    $scope.removefilter = function(FilterToRemove,i) {
+        if (confirm("Are you sure you want to delete this filter?")) {
+            var index = this.all_filters[i].options.indexOf(FilterToRemove);
+            this.all_filters[i].options.splice(index, 1);
+        }
+        else {
+        }
+    };
 
 }

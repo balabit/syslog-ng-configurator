@@ -134,6 +134,17 @@ source {{source_name}} {
 };
 {{/all_unixdgram_sources}}
 
+{{! FILTERS }}
+{{#all_filters}}
+filter {{filter_name}} {
+        {{#options}}
+        {{#enabled}}
+            {{#generate_enabled_options}} {{.}} {{/generate_enabled_options}}
+        {{/enabled}}
+        {{/options}}
+};
+{{/all_filters}}
+
 {{! DESTINATIONS }}
 {{#all_file_destinations}}
 destination {{destination_name}} {
@@ -263,6 +274,9 @@ log {
     {{#sources}}
         source({{.}});
     {{/sources}}
+    {{#filters}}
+        filter({{.}});
+    {{/filters}}
     {{#destinations}}
         destination({{.}});
     {{/destinations}}

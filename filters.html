@@ -1,0 +1,254 @@
+<!--
+ * syslog-ng OSE configurator
+ *
+ * Copyright 2012, Andras Mitzki
+ * License: GNU GENERAL PUBLIC LICENSE v3
+ *
+ * Date: Wed Dec 19 10:03:56 CET 2012
+-->
+
+<html>
+<body>
+    <form>
+        <br />
+        <h1>Filters</h1>
+        <br />
+        <a href="" class="button" ng-click="add_new_filter()">Add New Filter</a>
+        <input class="button" type="submit" value="Validate Settings" />
+        <hr />
+        <br />
+
+        <ul id="box">
+            <li ng-repeat="new_data in all_filters ">
+
+                <br />
+                <p>Add a unique name to this filter: </p>
+                <input class="syslog_ng_element" name="filter group name" type="text" ng-model="new_data.filter_name" placeholder="NAME" required="required" />
+                <br />
+                <input class="button" type="submit" value="Facility" ng-click="add_facility($index)"/>
+                <input class="button" type="submit" value="Level" ng-click="add_level($index)"/>
+                <input class="button" type="submit" value="Filter" ng-click="add_filter($index)"/>
+                <input class="button" type="submit" value="Netmask" ng-click="add_netmask($index)"/>
+                <input class="button" type="submit" value="Tags" ng-click="add_tags($index)"/>
+                <input class="button" type="submit" value="Program" ng-click="add_program($index)"/>
+                <input class="button" type="submit" value="Host" ng-click="add_host($index)"/>
+                <input class="button" type="submit" value="Match" ng-click="add_match($index)"/>
+                <input class="button" type="submit" value="Message" ng-click="add_message($index)"/>
+                <input class="button" type="submit" value="Source" ng-click="add_source($index)"/>
+                <input class="button" type="submit" value="Expression" ng-click="add_expression($index)"/>
+                <br />
+                <table class="bordered" id="{{name}}_source" ng-show="!checked">
+                    <thead>
+                        <tr>
+                            <th>Negation</th>
+                            <th>Filter name</th>
+                            <th>Filter value</th>
+                            <th>Accepted value</th>
+                            <th>Other options</th>
+                            <th>Description</th>
+                            <th>Logical value with the next filter</th>
+                            <th>Remove</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in new_data.options">
+                            <td>
+                                <select ng-show="data.name != 'expression'" ng-model="data.negotiation">
+                                    <option></option>
+                                    <option>not</option>
+                                </select>
+                            </td>
+                            <td>{{data.name}}</td>
+                            <td>
+                                <select name="facility" class="syslog_ng_element" ng-show="data.name == 'facility'" ng-model="data.value" multiple="multiple">
+                                    <option>kern</option>
+                                    <option>user</option>
+                                    <option>mail</option>
+                                    <option>daemon</option>
+                                    <option>auth</option>
+                                    <option>syslog</option>
+                                    <option>lpr</option>
+                                    <option>news</option>
+                                    <option>uucp</option>
+                                    <option>cron</option>
+                                    <option>authpriv</option>
+                                    <option>ftp</option>
+                                    <option>ntp</option>
+                                    <option>security</option>
+                                    <option>console</option>
+                                    <option>solaris-cron</option>
+                                    <option>local0</option>
+                                    <option>local1</option>
+                                    <option>local2</option>
+                                    <option>local3</option>
+                                    <option>local4</option>
+                                    <option>local5</option>
+                                    <option>local6</option>
+                                    <option>local7</option>
+                                </select>
+                                <select name="level" class="syslog_ng_element" ng-show="data.name == 'level'" ng-model="data.value" multiple="multiple">
+                                    <option>emerg</option>
+                                    <option>alert</option>
+                                    <option>crit</option>
+                                    <option>error</option>
+                                    <option>warning</option>
+                                    <option>notice</option>
+                                    <option>info</option>
+                                    <option>debug</option>
+                                </select>
+                                <input class="syslog_ng_element" type="text" ng-show="data.name == 'match' || data.name == 'program' || data.name == 'host' || data.name == 'message' || data.name == 'source' || data.name == 'tags' || data.name == 'filter' || data.name == 'netmask'" ng-model="data.value" required="required"/>
+                            </td>
+                            <td>{{data.accepted}}</td>
+                            <td width="30%">
+                                <label ng-show="data.name == 'match' || data.name == 'program' || data.name == 'host' || data.name == 'message' || data.name == 'source'"> Select Type:
+                                <select ng-model="data.type_value" >
+                                    <option>PCRE</option>
+                                    <option>POSIX</option>
+                                    <option>STRING</option>
+                                    <option>GLOB</option>
+                                </select>
+                                </label>
+                                <br />
+                                <label ng-show="data.name == 'match' || data.name == 'program' || data.name == 'host' || data.name == 'message' || data.name == 'source'"> Select Flag:
+                                <select ng-model="data.flag_value">
+                                    <option>global</option>
+                                    <option>ignore-case</option>
+                                    <option>newline</option>
+                                    <option>utf8</option>
+                                    <option>store-matches</option>
+                                    <option>substring</option>
+                                    <option>prefix</option>
+                                </select>
+                                </label>
+                                <br />
+                                <label ng-show="data.name == 'match'"> Select Value:
+                                <select ng-model="data.value_value" >
+                                    <option>BSDTAG</option>
+                                    <option>CONTEXT_ID</option>
+                                    <option>DATE</option>
+                                    <option>DAY</option>
+                                    <option>FACILITY_NUM</option>
+                                    <option>FACILITY</option>
+                                    <option>FULLDATE</option>
+                                    <option>HOST</option>
+                                    <option>HOUR</option>
+                                    <option>ISODATE</option>
+                                    <option>LEVEL_NUM</option>
+                                    <option>LEVEL</option>
+                                    <option>MESSAGE</option>
+                                    <option>MIN</option>
+                                    <option>MONTH_ABBREV</option>
+                                    <option>MONTH_NAME</option>
+                                    <option>MONTH</option>
+                                    <option>MONTH_WEEK</option>
+                                    <option>MSGHDR</option>
+                                    <option>MSG</option>
+                                    <option>PRIORITY</option>
+                                    <option>PRI</option>
+                                    <option>R_DATE</option>
+                                    <option>R_DAY</option>
+                                    <option>R_FULLDATE</option>
+                                    <option>R_HOUR</option>
+                                    <option>R_ISODATE</option>
+                                    <option>R_MIN</option>
+                                    <option>R_MONTH_ABBREV</option>
+                                    <option>R_MONTH_NAME</option>
+                                    <option>R_MONTH</option>
+                                    <option>R_MONTH_WEEK</option>
+                                    <option>R_SEC</option>
+                                    <option>R_STAMP</option>
+                                    <option>R_TZOFFSET</option>
+                                    <option>R_TZ</option>
+                                    <option>R_UNIXTIME</option>
+                                    <option>R_WEEK_DAY_ABBREV</option>
+                                    <option>R_WEEK_DAY_NAME</option>
+                                    <option>R_WEEK_DAY</option>
+                                    <option>R_WEEKDAY</option>
+                                    <option>R_WEEK</option>
+                                    <option>R_YEAR_DAY</option>
+                                    <option>R_YEAR</option>
+                                    <option>SDATA</option>
+                                    <option>S_DATE</option>
+                                    <option>S_DAY</option>
+                                    <option>SEC</option>
+                                    <option>SEQNUM</option>
+                                    <option>S_FULLDATE</option>
+                                    <option>S_HOUR</option>
+                                    <option>S_ISODATE</option>
+                                    <option>S_MIN</option>
+                                    <option>S_MONTH_ABBREV</option>
+                                    <option>S_MONTH_NAME</option>
+                                    <option>S_MONTH</option>
+                                    <option>S_MONTH_WEEK</option>
+                                    <option>SOURCEIP</option>
+                                    <option>S_SEC</option>
+                                    <option>S_STAMP</option>
+                                    <option>STAMP</option>
+                                    <option>S_TZOFFSET</option>
+                                    <option>S_TZ</option>
+                                    <option>S_UNIXTIME</option>
+                                    <option>S_WEEK_DAY_ABBREV</option>
+                                    <option>S_WEEK_DAY_NAME</option>
+                                    <option>S_WEEK_DAY</option>
+                                    <option>S_WEEKDAY</option>
+                                    <option>S_WEEK</option>
+                                    <option>S_YEAR_DAY</option>
+                                    <option>S_YEAR</option>
+                                    <option>TAGS</option>
+                                    <option>TAG</option>
+                                    <option>TZOFFSET</option>
+                                    <option>TZ</option>
+                                    <option>UNIXTIME</option>
+                                    <option>WEEK_DAY_ABBREV</option>
+                                    <option>WEEK_DAY_NAME</option>
+                                    <option>WEEK_DAY</option>
+                                    <option>WEEKDAY</option>
+                                    <option>WEEK</option>
+                                    <option>YEAR_DAY</option>
+                                    <option>YEAR</option>
+                                </select>
+                                </label>
+                                <input class="syslog_ng_element" type="text" ng-show="data.name == 'expression'" ng-model="data.expression1" required="required"/> <br />
+                                <label ng-show="data.name == 'expression'"> Select Numerical Operator:
+                                <select ng-model="data.numop">
+                                    <option>==</option>
+                                    <option>!=</option>
+                                    <option>></option>
+                                    <option><</option>
+                                    <option><=</option>
+                                    <option>>=</option>
+                                </select>
+                                </label><br />
+                                <input class="syslog_ng_element" type="text" ng-show="data.name == 'expression'" ng-model="data.expression2" required="required"/><br />
+                            </td>
+                            <td>{{data.description}}</td>
+                            <td>
+                                <select ng-show="data.name != 'expression'" ng-model="data.logical_next">
+                                    <option></option>
+                                    <option>and</option>
+                                    <option>or</option>
+                                </select>
+                            </td>
+                            <td>
+                                <a href="" class="button" ng-click="removefilter(data, this.$parent.$index)">Remove Filter</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Negation</th>
+                            <th>Filter name</th>
+                            <th>Filter value</th>
+                            <th>Accepted value</th>
+                            <th>Other options</th>
+                            <th>Description</th>
+                            <th>Logical value with the next filter</th>
+                            <th>Remove</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </li>
+        </ul>
+    </form>
+</body>
+</html>
